@@ -57,11 +57,7 @@ const int pressureZero = 102.4; //
 const int pressureMax = 921.6; //
 const int pressuretransducermax = 100; //psi value of transducer being used
 
-
 float pressureValue = 0; //variable to store the value coming from the pressure transducer
-
-
-
 
 
 //Temp føler
@@ -115,9 +111,7 @@ void setup() {
   ilt = ilt + readDO(ADC_Voltage, uint8_t(mpu_temp))/20.0;
   pressureValue = pressureValue + (pressureValue-pressureZero)/(pressureMax-pressureZero)/20; 
   delay(500);
-
   }
-  
 
   delay(1000);
   connectGSM("AT+CIPSHUT","OK");//lukker en tidligere forbindelse
@@ -126,9 +120,7 @@ void setup() {
   connectGSM("AT+CGATT=1","OK");
   connectGSM("AT+CSTT=\"internet\",\"\",\"\"","OK");
   connectGSM("AT+CIICR","OK");
-  // delay(1000);
   connectGSM("AT+CIFSR","10");
-  // delay(1000);
   connectGSM("AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",80","OK");
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
@@ -143,55 +135,10 @@ void setup() {
   sendCmd += len;                         //sendCmd = "AT+CIPSEND=60" forklaring: https://docs.espressif.com/projects/esp-at/en/latest/esp32/AT_Command_Set/TCP-IP_AT_Commands.html#at-cipsend-send-data-in-the-normal-transmission-mode-or-wi-fi-passthrough-mode
   connectGSM(sendCmd,">");                //
   connectGSM(s,"SAMEORIGIN");
-  // delay(1000);
   connectGSM("AT+CIPSHUT","OK");
-
 }
 
 void loop() {
-  // delay(3600000);
-  
-  // sensors_event_t a, g, temp;
-  // mpu.getEvent(&a, &g, &temp);
-
-
-  // randomNumber=random(50,70);
-  // dyb = - randomNumber/10.0;
-  // connectGSM("AT+CIPSHUT","OK");//lukker en tidligere forbindelse
-  // connectGSM("AT","OK");
-  // connectGSM("AT+CFUN=1","OK"); //AT+CFUN AT command  sets the level of functionality in the MT 1:full funtionalitet, MT 2:
-  // connectGSM("AT+CGATT=1","OK");
-  // connectGSM("AT+CSTT=\"internet\",\"\",\"\"","OK");
-  // connectGSM("AT+CIICR","OK");
-  // // delay(1000);
-  // connectGSM("AT+CIFSR","10");
-  // // delay(1000);
-  // connectGSM("AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",80","OK");
-  // String s = "GET /update?api_key=5CED5ZNII2FPBO02&field1="+String(ilt)+"&field2="+String(dyb)+"&field3="+ String(temp.temperature)+" HTTP/1.0\r\n\r\n";//skriver værdien 7.5 til 
- 
-  // int len = s.length();
-  // Serial.print("message length: ");
-  // Serial.println(len);
-
-  // String sendCmd="AT+CIPSEND=";           // sending number of byte command
-  // sendCmd += len;                         //sendCmd = "AT+CIPSEND=60" forklaring: https://docs.espressif.com/projects/esp-at/en/latest/esp32/AT_Command_Set/TCP-IP_AT_Commands.html#at-cipsend-send-data-in-the-normal-transmission-mode-or-wi-fi-passthrough-mode
-  // connectGSM(sendCmd,">");                //
-  // connectGSM(s,"SAMEORIGIN");
-  // // delay(1000);
-  // connectGSM("AT+CIPSHUT","OK");
-  
-
-  // if(gsm.available())
-  // {
-  //   Grsp = gsm.readString();
-  //   Serial.println(Grsp);
-  // }
-
-  // if(Serial.available())
-  // {
-  //   Arsp = Serial.readString();
-  //   gsm.println(Arsp);
-  // }
 
 }
 
@@ -207,8 +154,6 @@ void connectGSM (String cmd, char *res)
     {
       if(gsm.find(res))
       {
-    // Grsp = gsm.readString();
-    // Serial.println(Grsp);
         delay(100);
         return;
       }
@@ -216,32 +161,6 @@ void connectGSM (String cmd, char *res)
     delay(100);
    }
  }
-
-//  void SendSMSMessage()
-// {
-//   Serial.println ("Sending Message");
-//   gsm.println("AT+CMGF=1");    //Sets the GSM Module in Text Mode
-//   delay(200);
-//   //Serial.println ("Set SMS Number");
-//   gsm.println("AT+CMGS=\"" + number + "\"\r"); //Mobile phone number to send message
-//   delay(200);
-//   String SMS = "Hej, Hvordan går det? Hilsen fra Arduino";
-//   gsm.println(SMS);
-//   delay(100);
-//   gsm.println((char)26);// ASCII code of CTRL+Z
-//   delay(200);
-//   _buffer = _readSerial();
-// }
-
-// void RecieveSMSMessage()
-// {
-//   Serial.println ("gsm800L Read an SMS");
-//   gsm.println("AT+CMGF=1");
-//   delay (200);
-//   gsm.println("AT+CNMI=1,2,0,0,0"); // AT Command to receive a live SMS
-//   delay(200);
-//   Serial.write ("Unread Message done");
-// }
 
 String _readSerial() {
   _timeout = 0;
