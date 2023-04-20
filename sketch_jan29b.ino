@@ -51,6 +51,16 @@ int16_t readDO(uint32_t voltage_mv, uint8_t temperature_c)
   return (voltage_mv * DO_Table[temperature_c] / V_saturation);
 }
 
+// Tryk føler
+const int pressureInput = A0; //select the analog input pin for the pressure transducer
+const int pressureZero = 102.4; //
+const int pressureMax = 921.6; //
+const int pressuretransducermax = 100; //psi value of transducer being used
+
+
+float pressureValue = 0; //variable to store the value coming from the pressure transducer
+
+
 
 
 
@@ -95,7 +105,7 @@ void setup() {
   }
   Serial.println("MPU6050 Found!");
   mpu_temp = mpu.getTemperatureSensor();
-  uint16_t ilt
+  uint16_t ilt;
   for (size_t i = 0; i < 20; i++)
   {
       ADC_Raw = analogRead(DO_PIN);
@@ -103,12 +113,11 @@ void setup() {
 
 
   ilt = ilt + readDO(ADC_Voltage, uint8_t(mpu_temp))/20.0;
-
+  pressureValue = pressureValue + (pressureValue-pressureZero)/(pressureMax-pressureZero)/20; 
   delay(500);
 
   }
   
-
 
   delay(1000);
   connectGSM("AT+CIPSHUT","OK");//lukker en tidligere forbindelse
@@ -124,7 +133,7 @@ void setup() {
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
-  String s = "GET /update?api_key=5CED5ZNII2FPBO02&field1="+String(ilt)+"&field2="+String(dyb)+"&field3="+ String(temp.temperature)+" HTTP/1.0\r\n\r\n";//skriver værdien 7.5 til 
+  String s = "GET /update?api_key=5CED5ZNII2FPBO02&field1="+String(ilt)+"&field2="+String(pressureValue)+"&field3="+ String(temp.temperature)+" HTTP/1.0\r\n\r\n";//skriver værdien 7.5 til 
  
   int len = s.length();
   Serial.print("message length: ");
